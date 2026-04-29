@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Harmonic Oscillator Simulator | Damped & Driven Motion</title>
+    <!-- Chart.js for interactive plotting -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- MathJax for beautiful equations -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* better for sliders, but text can be selected */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #f5f7fc 0%, #e9eef4 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .sim-card {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(1px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+            padding: 1.5rem 2rem 2rem 2rem;
+            transition: all 0.2s;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 0.2rem;
+            color: #1e2f5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        h1 small {
+            font-size: 0.9rem;
+            font-weight: normal;
+            background: #d9e3f0;
+            padding: 4px 12px;
+            border-radius: 40px;
+            color: #1e466e;
+        }
+        .sub {
+            border-left: 5px solid #3a7ca5;
+            padding-left: 15px;
+            color: #2c3e66;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        .grid-2col {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        .controls-panel {
+            flex: 1.2;
+            min-width: 260px;
+            background: #fefefe;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .plot-panel {
+            flex: 2.5;
+            min-width: 400px;
+        }
+        .param-group {
+            margin-bottom: 1.5rem;
+        }
+        .param-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #1f3a64;
+            margin-bottom: 6px;
+        }
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            background: #cbdbe6;
+            height: 5px;
+            border-radius: 5px;
+        }
+        .param-value {
+            font-family: monospace;
+            background: #f0f2f8;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .damping-status {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 20px;
+            background: #eef2fa;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .force-check {
+            margin-top: 12px;
+            background: #eef3ff;
+            padding: 10px;
+            border-radius: 20px;
+        }
+        button {
+            background: #2c5f8a;
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: 0.1s;
+            font-size: 0.85rem;
+        }
+        button:hover {
+            background: #1f4465;
+            transform: scale(0.98);
+        }
+        .equations {
+            background: #f8faff;
+            border-radius: 1rem;
+            padding: 12px 18px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border: 1px solid #dee5f0;
+        }
+        .footnote {
+            font-size: 0.75rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6c7a92;
+        }
+        canvas {
+            max-height: 400px;
+            width: 100%;
+        }
+        @media (max-width: 780px) {
+            .sim-card {
+                padding: 1rem;
+            }
+            .grid-2col {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="sim-card">
+    <h1>📈 Harmonic Oscillator <small>Damped · Driven · Real-time</small></h1>
+    <div class="sub">
+        Interactive solution of \( m\ddot{x} + c\dot{x} + kx = F_{\text{ext}}(t) \) — underdamped, overdamped, critically damped regimes.
+    </div>
+
+    <div class="grid-2col">
+        <!-- LEFT: Controls -->
+        <div class="controls-panel">
+            <div class="param-group">
+                <label>🎛️ Mass <span id="m_val" class="param-value">1.00 kg</span></label>
+                <input type="range" id="mass_slider" min="0.3" max="5.0" step="0.01" value="1.0">
+            </div>
+            <div class="param-group">
+                <label>🔗 Spring constant <span id="k_val" class="param-value">4.00 N/m</span></label>
+                <input type="range" id="k_slider" min="0.5" max="15.0" step="0.1" value="4.0">
+            </div>
+            <div class="param-group">
+                <label>💧 Damping coefficient <span id="c_val" class="param-value">0.50 N·s/m</span></label>
+                <input type="range" id="c_slider" min="0" max="8.0" step="0.02" value="0.5">
+            </div>
+            <div class="damping-status" id="damping_label">
+                🔍 Status: Underdamped (oscillatory decay)
+            </div>
+
+            <div class="force-check">
+                <label style="display: flex; align-items: center; gap: 12px;">
+                    <input type="checkbox" id="force_toggle" style="width: 18px; height: 18px;"> 
+                    <strong>🌊 Apply External Forcing</strong> 
+                </label>
+                <div style="margin-top: 12px;" id="force_controls">
+                    <label>Amplitude \(F_0\): <span id="f0_val">2.0 N</span></label>
+                    <input type="range" id="f0_slider" min="0" max="8.0" step="0.1" value="2.0" disabled>
+                    <label style="margin-top: 8px;">Frequency \(\omega_d\): <span id="omega_f_val">2.00 rad/s</span></label>
+                    <input type="range" id="omega_f_slider" min="0.5" max="8.0" step="0.05" value="2.0" disabled>
+                    <div style="font-size:0.8rem; margin-top: 6px;">\(F(t) = F_0 \cos(\omega_f t)\)</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                <button id="reset_btn">⟳ Reset Initial Conditions</button>
+                <button id="pause_btn">⏸️ Pause</button>
+            </div>
+            <div class="equations">
+                <strong>📐 Equation of motion</strong><br>
+                \[ m\ddot{x} + c\dot{x} + kx = F_0 \cos(\omega_f t) \]
+                <span id="eq_status" style="font-size:0.8rem;">⚡ No external forcing (homogeneous)</span>
+            </div>
+        </div>
+
+        <!-- RIGHT: Plot -->
+        <div class="plot-panel">
+            <canvas id="oscillatorChart" width="700" height="380" style="max-width:100%; background: #ffffff; border-radius: 20px; padding: 6px;"></canvas>
+            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                <span>📌 Displacement \(x(t)\) [m]</span>
+                <span>⏱️ Time [s] &nbsp; <span id="time_cursor" style="font-family:monospace;">0.00 s</span></span>
+            </div>
+            <div style="margin-top: 10px; background:#f0f4fa; border-radius: 16px; padding: 8px 12px; font-size:0.85rem;">
+                <strong>⚙️ Regime info: </strong><span id="regime_detail">ω₀ = 2.00 rad/s ,  ζ = 0.125 → Underdamped</span>
+            </div>
+        </div>
+    </div>
+    <div class="footnote">
+        * Numerical integration (RK4) solves the ODE exactly. Initial displacement \(x(0)=0.8\) m, velocity \(v(0)=0\). Damping classification updates live.
+    </div>
+</div>
+
+<script>
+    // ---------- Physical system & simulation state ----------
+    let m = 1.0;       // kg
+    let k = 4.0;       // N/m
+    let c = 0.5;       // N·s/m
+
+    // Forcing parameters
+    let forceEnabled = false;
+    let F0 = 2.0;      // amplitude
+    let omega_f = 2.0; // driving frequency (rad/s)
+
+    // Simulation variables
+    let t = 0.0;
+    let x = 0.8;       // initial displacement (m)
+    let v = 0.0;       // initial velocity
+
+    let simRunning = true;
+    let animationId = null;
+    let lastTimestamp = 0;
+
+    // Chart data (time series)
+    let maxTimeWindow = 20.0;     // show 20 seconds
+    let timeData = [];
+    let dispData = [];
+
+    // Chart instance
+    let chart;
+
+    // DOM elements
+    const massSlider = document.getElementById('mass_slider');
+    const kSlider = document.getElementById('k_slider');
+    const cSlider = document.getElementById('c_slider');
+    const mVal = document.getElementById('m_val');
+    const kVal = document.getElementById('k_val');
+    const cVal = document.getElementById('c_val');
+    const dampingLabelDiv = document.getElementById('damping_label');
+    const regimeDetailSpan = document.getElementById('regime_detail');
+    const eqStatusSpan = document.getElementById('eq_status');
+    const forceToggle = document.getElementById('force_toggle');
+    const f0Slider = document.getElementById('f0_slider');
+    const omegaFSlider = document.getElementById('omega_f_slider');
+    const f0Val = document.getElementById('f0_val');
+    const omegaFVal = document.getElementById('omega_f_val');
+    const resetBtn = document.getElementById('reset_btn');
+    const pauseBtn = document.getElementById('pause_btn');
+    const timeCursorSpan = document.getElementById('time_cursor');
+
+    // Helper: compute natural frequency & damping ratio
+    function computeParams() {
+        const omega0 = Math.sqrt(k / m);
+        const zeta = c / (2 * Math.sqrt(m * k));
+        const Delta = c * c - 4 * m * k;
+        return { omega0, zeta, Delta };
+    }
+
+    // Update damping status message & regime text
+    function updateDampingUI() {
+        const { omega0, zeta, Delta } = computeParams();
+        let regimeMsg = "";
+        let detailMsg = `ω₀ = ${omega0.toFixed(2)} rad/s,  ζ = ${zeta.toFixed(3)} → `;
+        if (Math.abs(Delta) < 1e-6) {
+            regimeMsg = "✅ Critically Damped (fastest return to equilibrium, no oscillation)";
+            detailMsg += "Critically Damped";
+        } else if (Delta > 0) {
+            regimeMsg = "🔴 Overdamped (exponential decay, no oscillation)";
+            detailMsg += "Overdamped";
+        } else {
+            const dampedFreq = omega0 * Math.sqrt(1 - zeta * zeta);
+            regimeMsg = `🟢 Underdamped (oscillatory decay, ω_d ≈ ${dampedFreq.toFixed(2)} rad/s)`;
+            detailMsg += `Underdamped, ω_d ≈ ${dampedFreq.toFixed(2)} rad/s`;
+        }
+        dampingLabelDiv.innerHTML = `⚡ ${regimeMsg}`;
+        regimeDetailSpan.innerText = detailMsg;
+    }
+
+    // Update forcing UI enable/disable
+    function updateForceUI() {
+        const enabled = forceToggle.checked;
+        forceEnabled = enabled;
+        f0Slider.disabled = !enabled;
+        omegaFSlider.disabled = !enabled;
+        if (enabled) {
+            eqStatusSpan.innerHTML = "🌊 External forcing active: \( F(t) = " + F0.toFixed(2) + "\cos(" + omega_f.toFixed(2) + " t) \)";
+        } else {
+            eqStatusSpan.innerHTML = "⚡ No external forcing (homogeneous equation)";
+        }
+    }
+
+    // compute external force at time t
+    function externalForce(t_sec) {
+        if (!forceEnabled) return 0.0;
+        return F0 * Math.cos(omega_f * t_sec);
+    }
+
+    // acceleration function: a = (F_ext - c*v - k*x) / m
+    function acceleration(t_sec, x_pos, v_vel) {
+        const F_ext = externalForce(t_sec);
+        return (F_ext - c * v_vel - k * x_pos) / m;
+    }
+
+    // RK4 integrator step (fixed dt = 0.02s for smoothness & stability)
+    function rk4Step(dt) {
+        let t_cur = t;
+        let x_cur = x;
+        let v_cur = v;
+
+        // k1 for velocity and acceleration
+        let a1 = acceleration(t_cur, x_cur, v_cur);
+        let k1_v = a1;
+        let k1_x = v_cur;
+
+        // k2
+        let t2 = t_cur + dt/2;
+        let x2 = x_cur + k1_x * dt/2;
+        let v2 = v_cur + k1_v * dt/2;
+        let a2 = acceleration(t2, x2, v2);
+        let k2_v = a2;
+        let k2_x = v2;
+
+        // k3
+        let t3 = t_cur + dt/2;
+        let x3 = x_cur + k2_x * dt/2;
+        let v3 = v_cur + k2_v * dt/2;
+        let a3 = acceleration(t3, x3, v3);
+        let k3_v = a3;
+        let k3_x = v3;
+
+        // k4
+        let t4 = t_cur + dt;
+        let x4 = x_cur + k3_x * dt;
+        let v4 = v_cur + k3_v * dt;
+        let a4 = acceleration(t4, x4, v4);
+        let k4_v = a4;
+        let k4_x = v4;
+
+        let new_v = v_cur + dt/6.0 * (k1_v + 2*k2_v + 2*k3_v + k4_v);
+        let new_x = x_cur + dt/6.0 * (k1_x + 2*k2_x + 2*k3_x + k4_x);
+
+        x = new_x;
+        v = new_v;
+        t += dt;
+    }
+
+    // Reset simulation state (keep parameters)
+    function resetSimulation() {
+        t = 0.0;
+        x = 0.8;
+        v = 0.0;
+        // clear existing data and add initial point
+        timeData = [0];
+        dispData = [x];
+        updateChartData();
+        if (chart) chart.update();
+        timeCursorSpan.innerText = "0.00 s";
+    }
+
+    // Update chart with current data window (maintain last maxTimeWindow seconds)
+    function updateChartData() {
+        if (!chart) return;
+        // keep only data within [t - maxTimeWindow, t] but for simplicity we keep all until length > 1000 then trim?
+        // But we want to show last 20 seconds: remove points older than t - maxTimeWindow
+        if (timeData.length > 2) {
+            let cutoff = t - maxTimeWindow;
+            while (timeData.length > 0 && timeData[0] < cutoff) {
+                timeData.shift();
+                dispData.shift();
+            }
+        }
+        // limit total points for performance
+        if (timeData.length > 1800) {
+            timeData = timeData.slice(-1500);
+            dispData = dispData.slice(-1500);
+        }
+        chart.data.datasets[0].data = timeData.map((tm, idx) => ({x: tm, y: dispData[idx]}));
+        chart.update('none');  // 'none' for faster updates, will redraw later
+    }
+
+    // Append new point from current state
+    function appendCurrentState() {
+        timeData.push(t);
+        dispData.push(x);
+        // sliding window
+        if (timeData.length > 2000) {
+            timeData = timeData.slice(-1800);
+            dispData = dispData.slice(-1800);
+        }
+        if (chart) {
+            chart.data.datasets[0].data = timeData.map((tm, idx) => ({x: tm, y: dispData[idx]}));
+            chart.update('quiet');
+        }
+        timeCursorSpan.innerText = t.toFixed(2) + " s";
+    }
+
+    // simulation loop using requestAnimationFrame (fixed time step)
+    let lastFrameTime = 0;
+    const TIME_STEP = 0.02;  // 20 ms physics step
+
+    function simLoop(nowMs) {
+        if (!simRunning) {
+            animationId = requestAnimationFrame(simLoop);
+            return;
+        }
+        // integrate fixed steps to keep accuracy independent of frame rate
+        // we integrate up to current real time? Actually we do fixed step each frame for smoothness
+        // but we need real consistency: integrate one step per frame (dt = TIME_STEP)
+        // For responsiveness, do one RK4 step per frame
+        rk4Step(TIME_STEP);
+        appendCurrentState();
+        
+        // update UI for parameters if changed by sliders inside loop? we handle via event listeners.
+        animationId = requestAnimationFrame(simLoop);
+    }
+
+    // ---- Parameter change handlers ----
+    function updateMass() {
+        m = parseFloat(massSlider.value);
+        mVal.innerText = m.toFixed(2) + " kg";
+        updateDampingUI();
+    }
+    function updateSpring() {
+        k = parseFloat(kSlider.value);
+        kVal.innerText = k.toFixed(2) + " N/m";
+        updateDampingUI();
+    }
+    function updateDamping() {
+        c = parseFloat(cSlider.value);
+        cVal.innerText = c.toFixed(2) + " N·s/m";
+        updateDampingUI();
+    }
+    function updateF0() {
+        F0 = parseFloat(f0Slider.value);
+        f0Val.innerText = F0.toFixed(2) + " N";
+        updateForceUI();
+    }
+    function updateOmegaF() {
+        omega_f = parseFloat(omegaFSlider.value);
+        omegaFVal.innerText = omega_f.toFixed(2) + " rad/s";
+        updateForceUI();
+    }
+    function toggleForce() {
+        updateForceUI();
+        // force equation changed => no need to reset state, just new force term active.
+        // But to avoid discontinuity, fine.
+    }
+    
+    // add listeners
+    massSlider.addEventListener('input', () => { updateMass(); });
+    kSlider.addEventListener('input', () => { updateSpring(); });
+    cSlider.addEventListener('input', () => { updateDamping(); });
+    f0Slider.addEventListener('input', () => { updateF0(); });
+    omegaFSlider.addEventListener('input', () => { updateOmegaF(); });
+    forceToggle.addEventListener('change', () => { toggleForce(); });
+    resetBtn.addEventListener('click', () => { resetSimulation(); });
+    pauseBtn.addEventListener('click', () => { 
+        simRunning = !simRunning; 
+        pauseBtn.innerHTML = simRunning ? "⏸️ Pause" : "▶️ Run";
+    });
+
+    // Build chart
+    function initChart() {
+        const ctx = document.getElementById('oscillatorChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Displacement x(t) [m]',
+                    data: [{x: 0, y: 0.8}],
+                    borderColor: '#e67e22',
+                    backgroundColor: '#e67e22',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    showLine: true,
+                    tension: 0.2,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                animation: false,
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Time (seconds)', color: '#2c3e66' },
+                        min: 0,
+                        max: maxTimeWindow,
+                        grid: { color: '#e2e8f0' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Displacement x(t) (m)', color: '#2c3e66' },
+                        grid: { color: '#e2e8f0' }
+                    }
+                },
+                plugins: {
+                    tooltip: { mode: 'nearest', intersect: false },
+                    legend: { position: 'top' }
+                }
+            }
+        });
+        // set initial data
+        timeData = [0];
+        dispData = [0.8];
+        chart.data.datasets[0].data = [{x:0, y:0.8}];
+        chart.update();
+    }
+
+    // dynamic axis update: every frame we might adjust x-axis max to follow t
+    function updateAxisRange() {
+        if (!chart) return;
+        let currentMax = t + 1.0;
+        if (currentMax > maxTimeWindow) {
+            // user can see last window: we can set new max to t + 2 but we prefer fixed window: sliding window is fixed.
+            // avoid sudden jumps: but chart x-axis max is fixed to maxTimeWindow, show latest 20 sec by trimming data.
+            // however to display well, we just update x-axis max if t > maxTimeWindow-1?
+            if (t > maxTimeWindow - 1.0 && chart.options.scales.x.max === maxTimeWindow) {
+                // just keep as fixed window style: sliding window already handled in data trimming.
+            }
+        }
+        // ensure x-axis min = max(0, t - maxTimeWindow) but for readability use fixed 0? Sliding window data trimming already.
+        // Let's set x-axis min to max(0, t - maxTimeWindow) for dynamic view? it may shift. But consistency: set min = (t > maxTimeWindow) ? t-maxTimeWindow : 0;
+        if (t > maxTimeWindow) {
+            chart.options.scales.x.min = t - maxTimeWindow;
+            chart.options.scales.x.max = t;
+        } else {
+            chart.options.scales.x.min = 0;
+            chart.options.scales.x.max = maxTimeWindow;
+        }
+        // smooth update but not too frequent
+    }
+
+    // override append to also update axis once per second
+    let lastAxisUpdate = 0;
+    const originalAppend = appendCurrentState;
+    window.appendCurrentState = function() {
+        originalAppend();
+        if (t - lastAxisUpdate > 0.4 || chart.options.scales.x.min !== (t > maxTimeWindow ? t-maxTimeWindow : 0)) {
+            if (t > maxTimeWindow) {
+                chart.options.scales.x.min = t - maxTimeWindow;
+                chart.options.scales.x.max = t;
+            } else {
+                chart.options.scales.x.min = 0;
+                chart.options.scales.x.max = maxTimeWindow;
+            }
+            lastAxisUpdate = t;
+            if (chart) chart.update('none');
+        }
+    }.bind(this);
+
+    // redefine appendCurrentState to incorporate axis management
+    appendCurrentState = function() {
+        timeData.push(t);
+        dispData.push(x);
+        if (timeData.length > 2000) {
+            timeData = timeData.slice(-1800);
+            dispData = dispData.slice(-1800);
+        }
+        if (chart) {
+            chart.data.datasets[0].data = timeData.map((tm, idx) => ({x: tm, y: dispData[idx]}));
+            // dynamic axis
+            if (t > maxTimeWindow) {
+                chart.options.scales.x.min = t - maxTimeWindow;
+                chart.options.scales.x.max = t;
+            } else {
+                chart.options.scales.x.min = 0;
+                chart.options.scales.x.max = maxTimeWindow;
+            }
+            chart.update('quiet');
+        }
+        timeCursorSpan.innerText = t.toFixed(2) + " s";
+    };
+    
+    // replace to keep consistent
+    window.appendCurrentState = appendCurrentState;
+
+    // Override rk4Step to use current parameters
+    // ensure that acceleration reads updated m, c, k, forceEnabled, F0, omega_f
+    // but closures already capture latest variables. All good.
+
+    // Finally start simulation
+    function start() {
+        initChart();
+        updateMass();
+        updateSpring();
+        updateDamping();
+        updateF0();
+        updateOmegaF();
+        updateForceUI();
+        resetSimulation();  // sets t=0, x=0.8, v=0
+        simRunning = true;
+        pauseBtn.innerHTML = "⏸️ Pause";
+        animationId = requestAnimationFrame(simLoop);
+    }
+
+    start();
+</script>
+</body>
+</html>
