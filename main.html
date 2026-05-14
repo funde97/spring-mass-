@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Labs - LAUC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering math equations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -701,6 +703,126 @@
             color: #7f8c8d;
             max-width: 400px;
         }
+
+        /* ============================================================
+           Theory page — Spring Mass System specific styles
+           ============================================================ */
+        .theory-section {
+            margin-bottom: 30px;
+        }
+
+        .theory-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8f4fc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theory-section-title i {
+            color: #3498db;
+            font-size: 18px;
+        }
+
+        .theory-section p {
+            color: #444;
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .theory-case-card {
+            background: #fff;
+            border: 1px solid #dce8f5;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .theory-case-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .theory-case-card .condition-badge {
+            display: inline-block;
+            background: #e8f4fc;
+            color: #2c80b9;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 4px;
+            padding: 3px 10px;
+            margin-bottom: 10px;
+        }
+
+        .theory-case-card p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .theory-components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .theory-component-card {
+            background: #f0f7ff;
+            border-radius: 8px;
+            padding: 18px 14px;
+            text-align: center;
+            border: 1px solid #d1e7ff;
+        }
+
+        .theory-component-card i {
+            font-size: 30px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .theory-component-card h5 {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .theory-component-card p {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        .math-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 0 6px 6px 0;
+            padding: 14px 18px;
+            margin: 12px 0;
+            overflow-x: auto;
+        }
+
+        .apps-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .app-tag {
+            background: #e8f4fc;
+            color: #2c80b9;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 13px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -759,46 +881,66 @@
                     <div class="section-card" data-target="page-pretest">
                         <i class="fas fa-question-circle"></i>
                         <h3>Pretest</h3>
-                        <p>Pre-experiment assessment</p>
+                        <p>Test your prior knowledge</p>
                     </div>
                     <div class="section-card" data-target="page-simulation">
-                        <i class="fas fa-desktop"></i>
+                        <i class="fas fa-laptop-code"></i>
                         <h3>Simulation</h3>
-                        <p>Interactive simulation</p>
+                        <p>Interactive experiment</p>
                     </div>
                     <div class="section-card" data-target="page-posttest">
                         <i class="fas fa-clipboard-check"></i>
                         <h3>Posttest</h3>
-                        <p>Post-experiment assessment</p>
+                        <p>Evaluate your learning</p>
                     </div>
                     <div class="section-card" data-target="page-references">
                         <i class="fas fa-book-open"></i>
                         <h3>References</h3>
-                        <p>Further reading materials</p>
+                        <p>Further reading</p>
                     </div>
                     <div class="section-card" data-target="page-contributors">
                         <i class="fas fa-users"></i>
                         <h3>Contributors</h3>
-                        <p>People involved</p>
+                        <p>Team behind the lab</p>
                     </div>
                     <div class="section-card" data-target="page-feedback">
-                        <i class="fas fa-comment-alt"></i>
+                        <i class="fas fa-star"></i>
                         <h3>Feedback</h3>
                         <p>Share your experience</p>
                     </div>
+                </div>
+ 
+                <!-- Question Section -->
+                <div class="question-section">
+                    <h3>Welcome to the Virtual Lab</h3>
+                    <p class="question-text">Select any section above to begin exploring the experiment on the <strong>Spring Mass System using Differential Equations</strong>.</p>
+                </div>
+ 
+                <!-- Feedback Section -->
+                <div class="feedback-section">
+                    <div class="feedback-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>About This Lab</h3>
+                    </div>
+                    <div class="feedback-content">
+                        <p>This virtual laboratory provides an interactive platform to understand the Spring Mass System through second-order differential equations. Explore the theory, run simulations, and test your understanding.</p>
+                        <p>Navigate through the sections using the cards above to access theory, simulations, and tests.</p>
+                    </div>
+                    <button class="feedback-button">
+                        <i class="fas fa-play"></i>
+                        Get Started
+                    </button>
                 </div>
             </div>
         </div>
  
         <!-- ============================================================
-             ✅ CARD PAGES — one per card, all hidden by default
+             CARD PAGES
              ============================================================ -->
  
-        <!-- 1. AIM PAGE -->
-        <div id="page-aim" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+        <!-- PAGE: Aim -->
+        <div id="page-aim" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
                 <i class="fas fa-bullseye"></i>
                 <div>
@@ -807,267 +949,374 @@
                 </div>
             </div>
             <div class="page-content-box">
-                <h4>Experiment Objective</h4>
-                <p>The aim of this virtual lab experiment is to understand the concept of <strong>Rank of a Matrix</strong> through interactive tools and visual demonstrations.</p>
-                <p>By the end of this experiment, students will be able to:</p>
-                <ul style="margin-left: 20px; margin-top: 8px; color: #555; line-height: 2;">
-                    <li>Define and explain the rank of a matrix.</li>
-                    <li>Compute the rank using row reduction (Echelon Form).</li>
-                    <li>Identify the relationship between rank, nullity, and the dimensions of a matrix.</li>
-                    <li>Apply the concept of rank to solve systems of linear equations.</li>
-                </ul>
+                <h4>Objective</h4>
+                <p>To study and analyze the motion of a Spring Mass System using second-order linear differential equations with constant damping coefficient.</p>
+                <h4 style="margin-top:16px;">Goals</h4>
+                <p>1. Formulate the differential equation governing the Spring Mass System.</p>
+                <p>2. Solve the differential equation for different damping conditions.</p>
+                <p>3. Interpret the physical behavior (overdamped, critically damped, underdamped) from the mathematical solution.</p>
+                <p>4. Visualize and simulate the displacement-time behavior of the system.</p>
             </div>
         </div>
- 
-        <!-- 2. THEORY PAGE -->
-        <div id="page-theory" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- ============================================================
+             PAGE: Theory — UPDATED to Spring Mass System
+             ============================================================ -->
+        <div id="page-theory" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
                 <i class="fas fa-book"></i>
                 <div>
                     <h2>Theory</h2>
-                    <p>Background concepts &amp; definitions</p>
+                    <p>Spring Mass System using Differential Equations (Constant Damping Coefficient)</p>
                 </div>
             </div>
-            <div class="page-content-box">
-                <h4>What is Rank of a Matrix?</h4>
-                <p>The <strong>rank</strong> of a matrix is the maximum number of linearly independent row vectors (or column vectors) in the matrix. It indicates the dimension of the vector space spanned by its rows or columns.</p>
- 
-                <h4 style="margin-top: 20px;">Row Echelon Form (REF)</h4>
-                <p>A matrix is in Row Echelon Form if:</p>
-                <ul style="margin-left: 20px; color: #555; line-height: 2;">
-                    <li>All zero rows are at the bottom.</li>
-                    <li>The leading entry of each non-zero row is to the right of the leading entry of the row above it.</li>
-                </ul>
- 
-                <h4 style="margin-top: 20px;">Rank-Nullity Theorem</h4>
-                <p>For an m × n matrix A: <strong>Rank(A) + Nullity(A) = n</strong>, where n is the number of columns.</p>
- 
-                <h4 style="margin-top: 20px;">Key Properties</h4>
-                <ul style="margin-left: 20px; color: #555; line-height: 2;">
-                    <li>Rank(A) = Rank(Aᵀ)</li>
-                    <li>Rank(A) ≤ min(m, n)</li>
-                    <li>A square matrix is invertible if and only if its rank equals its order.</li>
-                </ul>
+
+            <!-- Introduction -->
+            <div class="page-content-box" style="margin-bottom: 24px;">
+                <p>The spring mass system is an important application of second-order differential equations. It is widely used to study vibrations, oscillations, and damping in mechanical systems. In this topic, the motion of the system is represented mathematically using differential equations and solved to determine displacement, velocity, and behavior of vibration with time.</p>
+            </div>
+
+            <!-- 1. Components -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-cogs"></i> 1. Components of Spring Mass System</div>
+                <p>A damped spring mass system consists of three key components:</p>
+                <div class="theory-components-grid">
+                    <div class="theory-component-card">
+                        <i class="fas fa-cube"></i>
+                        <h5>Mass (m)</h5>
+                        <p>Object attached to the spring; provides inertia to the system</p>
+                    </div>
+                    <div class="theory-component-card">
+                        <i class="fas fa-compress-alt"></i>
+                        <h5>Spring (k)</h5>
+                        <p>Provides restoring force proportional to displacement</p>
+                    </div>
+                    <div class="theory-component-card">
+                        <i class="fas fa-sliders-h"></i>
+                        <h5>Damper (c)</h5>
+                        <p>Opposes motion and reduces vibration over time</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Forces -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-arrow-right"></i> 2. Forces Acting on the System</div>
+                <p>According to Newton's Second Law, the net force equals mass times acceleration: \( \text{Net Force} = m\dfrac{d^2x}{dt^2} \)</p>
+                <p>Three forces act on the mass:</p>
+
+                <div class="theory-case-card">
+                    <h4>(a) Spring Force</h4>
+                    <p>Using Hooke's Law, the spring force is:</p>
+                    <div class="math-box">\[ F_s = -kx \]</div>
+                    <p>where \(k\) = spring constant and \(x\) = displacement. This force acts opposite to displacement.</p>
+                </div>
+
+                <div class="theory-case-card">
+                    <h4>(b) Damping Force</h4>
+                    <p>The damping force is proportional to velocity:</p>
+                    <div class="math-box">\[ F_d = -c\frac{dx}{dt} \]</div>
+                    <p>where \(c\) = damping coefficient and \(\dfrac{dx}{dt}\) = velocity. This force opposes motion.</p>
+                </div>
+
+                <div class="theory-case-card">
+                    <h4>(c) Inertia Force</h4>
+                    <p>Due to acceleration of mass:</p>
+                    <div class="math-box">\[ F_i = m\frac{d^2x}{dt^2} \]</div>
+                </div>
+            </div>
+
+            <!-- 3. Formation of DE -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-superscript"></i> 3. Formation of Differential Equation</div>
+                <p>Applying Newton's second law and summing all forces:</p>
+                <div class="math-box">\[ m\frac{d^2x}{dt^2} = -c\frac{dx}{dt} - kx \]</div>
+                <p>Rearranging gives the <strong>general differential equation of damped free vibration</strong>:</p>
+                <div class="math-box">\[ m\frac{d^2x}{dt^2} + c\frac{dx}{dt} + kx = 0 \]</div>
+                <p>This equation is:</p>
+                <div class="apps-list" style="margin-top: 8px;">
+                    <span class="app-tag">Second-order</span>
+                    <span class="app-tag">Linear</span>
+                    <span class="app-tag">Homogeneous</span>
+                    <span class="app-tag">Constant coefficient</span>
+                </div>
+            </div>
+
+            <!-- 4. Standard Form -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-equals"></i> 4. Standard Form</div>
+                <p>Dividing throughout by \(m\):</p>
+                <div class="math-box">\[ \frac{d^2x}{dt^2} + \frac{c}{m}\frac{dx}{dt} + \frac{k}{m}x = 0 \]</div>
+                <p>Let \(2\alpha = \dfrac{c}{m}\) and \(\omega_n^2 = \dfrac{k}{m}\), then:</p>
+                <div class="math-box">\[ \frac{d^2x}{dt^2} + 2\alpha\frac{dx}{dt} + \omega_n^2 x = 0 \]</div>
+                <p>where \(\alpha\) = damping factor and \(\omega_n\) = natural angular frequency.</p>
+            </div>
+
+            <!-- 5. Solution -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-square-root-alt"></i> 5. Solution of Differential Equation</div>
+                <p>Assume solution \(x = e^{rt}\). Then \(\dfrac{dx}{dt} = re^{rt}\) and \(\dfrac{d^2x}{dt^2} = r^2e^{rt}\).</p>
+                <p>Substituting into the equation and dividing by \(e^{rt} \neq 0\) gives the <strong>auxiliary (characteristic) equation</strong>:</p>
+                <div class="math-box">\[ r^2 + 2\alpha r + \omega_n^2 = 0 \]</div>
+            </div>
+
+            <!-- 6. Roots -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-project-diagram"></i> 6. Roots of Auxiliary Equation</div>
+                <p>Using the quadratic formula:</p>
+                <div class="math-box">\[ r = -\alpha \pm \sqrt{\alpha^2 - \omega_n^2} \]</div>
+                <p>The nature of the roots determines the system's behavior.</p>
+            </div>
+
+            <!-- 7. Cases of Damping -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-layer-group"></i> 7. Cases of Damping</div>
+
+                <div class="theory-case-card">
+                    <h4>Case 1: Overdamped System</h4>
+                    <span class="condition-badge">Condition: \(\alpha^2 > \omega_n^2\)</span>
+                    <p>Roots are <strong>real and distinct</strong> (\(r_1, r_2 \in \mathbb{R}\)).</p>
+                    <p><strong>Solution:</strong></p>
+                    <div class="math-box">\[ x = C_1 e^{r_1 t} + C_2 e^{r_2 t} \]</div>
+                    <p><strong>Characteristics:</strong> No oscillation. Motion slowly returns to equilibrium. Heavy damping.</p>
+                </div>
+
+                <div class="theory-case-card">
+                    <h4>Case 2: Critically Damped System</h4>
+                    <span class="condition-badge">Condition: \(\alpha^2 = \omega_n^2\)</span>
+                    <p>Roots are <strong>equal</strong>: \(r = -\alpha\).</p>
+                    <p><strong>Solution:</strong></p>
+                    <div class="math-box">\[ x = (C_1 + C_2 t)\, e^{-\alpha t} \]</div>
+                    <p><strong>Characteristics:</strong> Fastest return to equilibrium. No oscillation.</p>
+                    <p><strong>Applications:</strong> Door closers, measuring instruments.</p>
+                </div>
+
+                <div class="theory-case-card">
+                    <h4>Case 3: Underdamped System</h4>
+                    <span class="condition-badge">Condition: \(\alpha^2 &lt; \omega_n^2\)</span>
+                    <p>Roots are <strong>complex</strong>: \(r = -\alpha \pm i\beta\), where \(\beta = \sqrt{\omega_n^2 - \alpha^2}\).</p>
+                    <p><strong>Solution:</strong></p>
+                    <div class="math-box">\[ x = e^{-\alpha t}(C_1 \cos\beta t + C_2 \sin\beta t) \]</div>
+                    <p><strong>Characteristics:</strong> Oscillatory motion. Amplitude gradually decreases. Most practical systems are underdamped.</p>
+                </div>
+            </div>
+
+            <!-- 8. Undamped -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-wave-square"></i> 8. Undamped System</div>
+                <p>If damping coefficient \(c = 0\):</p>
+                <div class="math-box">\[ \frac{d^2x}{dt^2} + \omega_n^2 x = 0 \]</div>
+                <p>Auxiliary equation: \(r^2 + \omega_n^2 = 0\), giving roots \(r = \pm\, i\omega_n\).</p>
+                <p><strong>General Solution:</strong></p>
+                <div class="math-box">\[ x = C_1\cos\omega_n t + C_2\sin\omega_n t \]</div>
+                <p>This represents <strong>continuous simple harmonic motion</strong>.</p>
+            </div>
+
+            <!-- 9. Physical Interpretation -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-lightbulb"></i> 9. Physical Interpretation</div>
+                <div class="page-content-box">
+                    <p>• The <strong>spring</strong> stores energy.</p>
+                    <p>• The <strong>damper</strong> dissipates energy.</p>
+                    <p>• The <strong>mass</strong> provides inertia.</p>
+                    <p>• Differential equations describe how displacement changes with time.</p>
+                </div>
+            </div>
+
+            <!-- 10. Importance in Mathematics -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-graduation-cap"></i> 10. Importance in Mathematics</div>
+                <p>This topic helps in understanding:</p>
+                <div class="apps-list">
+                    <span class="app-tag">Linear differential equations</span>
+                    <span class="app-tag">Homogeneous equations</span>
+                    <span class="app-tag">Complementary functions</span>
+                    <span class="app-tag">Auxiliary equations</span>
+                    <span class="app-tag">Complex roots</span>
+                    <span class="app-tag">Exponential & trigonometric solutions</span>
+                    <span class="app-tag">Real-life application of calculus</span>
+                </div>
+            </div>
+
+            <!-- 11. Applications -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-industry"></i> 11. Applications</div>
+                <div class="apps-list">
+                    <span class="app-tag">Vehicle suspension systems</span>
+                    <span class="app-tag">Earthquake vibration analysis</span>
+                    <span class="app-tag">Robotics</span>
+                    <span class="app-tag">Mechanical structures</span>
+                    <span class="app-tag">Control systems</span>
+                    <span class="app-tag">Aerospace engineering</span>
+                    <span class="app-tag">Electrical analog circuits</span>
+                </div>
+            </div>
+
+            <!-- 12. Conclusion -->
+            <div class="theory-section">
+                <div class="theory-section-title"><i class="fas fa-check-circle"></i> 12. Conclusion</div>
+                <div class="page-content-box">
+                    <p>The spring mass system is one of the most important applications of differential equations in engineering and mathematics. Using second-order linear differential equations with constant coefficients, the motion of vibrating systems can be modeled and analyzed accurately.</p>
+                    <p style="margin-top: 10px;">The damping coefficient determines whether the motion is oscillatory or non-oscillatory, while the mathematical solution depends on the roots of the auxiliary equation.</p>
+                </div>
             </div>
         </div>
- 
-        <!-- 3. PRETEST PAGE -->
-        <div id="page-pretest" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- PAGE: Pretest -->
+        <div id="page-pretest" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
                 <i class="fas fa-question-circle"></i>
                 <div>
                     <h2>Pretest</h2>
-                    <p>Answer before starting the experiment</p>
+                    <p>Test your prior knowledge before starting the experiment</p>
                 </div>
             </div>
- 
             <div class="mcq-question">
-                <p>Q1. The rank of a zero matrix of order 3×3 is:</p>
-                <label class="mcq-option"><input type="radio" name="q1" value="a"> 3</label>
-                <label class="mcq-option"><input type="radio" name="q1" value="b"> 1</label>
-                <label class="mcq-option"><input type="radio" name="q1" value="c"> 0</label>
-                <label class="mcq-option"><input type="radio" name="q1" value="d"> Undefined</label>
+                <p>1. Which law is used to derive the spring force in a spring mass system?</p>
+                <label class="mcq-option"><input type="radio" name="q1"> Newton's Second Law</label>
+                <label class="mcq-option"><input type="radio" name="q1"> Hooke's Law</label>
+                <label class="mcq-option"><input type="radio" name="q1"> Faraday's Law</label>
+                <label class="mcq-option"><input type="radio" name="q1"> Ohm's Law</label>
             </div>
- 
             <div class="mcq-question">
-                <p>Q2. If A is a 4×5 matrix, the maximum possible rank of A is:</p>
-                <label class="mcq-option"><input type="radio" name="q2" value="a"> 5</label>
-                <label class="mcq-option"><input type="radio" name="q2" value="b"> 4</label>
-                <label class="mcq-option"><input type="radio" name="q2" value="c"> 20</label>
-                <label class="mcq-option"><input type="radio" name="q2" value="d"> 9</label>
+                <p>2. The damping force in a spring mass system is proportional to:</p>
+                <label class="mcq-option"><input type="radio" name="q2"> Displacement</label>
+                <label class="mcq-option"><input type="radio" name="q2"> Acceleration</label>
+                <label class="mcq-option"><input type="radio" name="q2"> Velocity</label>
+                <label class="mcq-option"><input type="radio" name="q2"> Position</label>
             </div>
- 
             <div class="mcq-question">
-                <p>Q3. Which operation does NOT change the rank of a matrix?</p>
-                <label class="mcq-option"><input type="radio" name="q3" value="a"> Adding a multiple of one row to another</label>
-                <label class="mcq-option"><input type="radio" name="q3" value="b"> Multiplying the entire matrix by a scalar</label>
-                <label class="mcq-option"><input type="radio" name="q3" value="c"> Squaring the matrix</label>
-                <label class="mcq-option"><input type="radio" name="q3" value="d"> Replacing a row with zeros</label>
+                <p>3. The equation \(m\ddot{x} + c\dot{x} + kx = 0\) is a:</p>
+                <label class="mcq-option"><input type="radio" name="q3"> First-order linear ODE</label>
+                <label class="mcq-option"><input type="radio" name="q3"> Second-order linear ODE</label>
+                <label class="mcq-option"><input type="radio" name="q3"> Partial differential equation</label>
+                <label class="mcq-option"><input type="radio" name="q3"> Non-linear ODE</label>
             </div>
- 
-            <button class="submit-btn" onclick="submitTest('pretest')">
-                <i class="fas fa-paper-plane"></i> Submit Pretest
-            </button>
+            <button class="submit-btn">Submit Answers</button>
         </div>
- 
-        <!-- 4. SIMULATION PAGE -->
-        <div id="page-simulation" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- PAGE: Simulation -->
+        <div id="page-simulation" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
-                <i class="fas fa-desktop"></i>
+                <i class="fas fa-laptop-code"></i>
                 <div>
                     <h2>Simulation</h2>
-                    <p>Interactive matrix rank simulator</p>
+                    <p>Interactive Spring Mass System experiment</p>
                 </div>
             </div>
             <div class="sim-placeholder">
-                <i class="fas fa-cogs"></i>
-                <h3>Simulation Loading Area</h3>
-                <p>Your interactive simulation will appear here. Replace this block with your simulation iframe, canvas, or component.</p>
-                <p style="margin-top: 8px; font-size: 13px; background: #fff; padding: 10px 18px; border-radius: 6px; border: 1px solid #d1e7ff;">
-                    Example: <code>&lt;iframe src="simulation.html" width="100%" height="500px"&gt;&lt;/iframe&gt;</code>
-                </p>
+                <i class="fas fa-compress-alt"></i>
+                <h3>Spring Mass Simulation</h3>
+                <p>The interactive simulation will be embedded here. Users can adjust mass, spring constant, and damping coefficient to visualize system behavior.</p>
             </div>
         </div>
- 
-        <!-- 5. POSTTEST PAGE -->
-        <div id="page-posttest" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- PAGE: Posttest -->
+        <div id="page-posttest" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
                 <i class="fas fa-clipboard-check"></i>
                 <div>
                     <h2>Posttest</h2>
-                    <p>Answer after completing the experiment</p>
+                    <p>Evaluate your understanding after the experiment</p>
                 </div>
             </div>
- 
             <div class="mcq-question">
-                <p>Q1. The rank of an identity matrix of order n is:</p>
-                <label class="mcq-option"><input type="radio" name="pq1" value="a"> 0</label>
-                <label class="mcq-option"><input type="radio" name="pq1" value="b"> n−1</label>
-                <label class="mcq-option"><input type="radio" name="pq1" value="c"> n</label>
-                <label class="mcq-option"><input type="radio" name="pq1" value="d"> 1</label>
+                <p>1. When \(\alpha^2 > \omega_n^2\), the system is:</p>
+                <label class="mcq-option"><input type="radio" name="pq1"> Underdamped</label>
+                <label class="mcq-option"><input type="radio" name="pq1"> Critically damped</label>
+                <label class="mcq-option"><input type="radio" name="pq1"> Overdamped</label>
+                <label class="mcq-option"><input type="radio" name="pq1"> Undamped</label>
             </div>
- 
             <div class="mcq-question">
-                <p>Q2. A system of linear equations AX = B is consistent if:</p>
-                <label class="mcq-option"><input type="radio" name="pq2" value="a"> Rank(A) ≠ Rank(A|B)</label>
-                <label class="mcq-option"><input type="radio" name="pq2" value="b"> Rank(A) = Rank(A|B)</label>
-                <label class="mcq-option"><input type="radio" name="pq2" value="c"> Rank(A) = 0</label>
-                <label class="mcq-option"><input type="radio" name="pq2" value="d"> Det(A) = 0</label>
+                <p>2. For an underdamped system, the solution involves:</p>
+                <label class="mcq-option"><input type="radio" name="pq2"> Only exponential terms</label>
+                <label class="mcq-option"><input type="radio" name="pq2"> Exponential × sinusoidal terms</label>
+                <label class="mcq-option"><input type="radio" name="pq2"> Only sinusoidal terms</label>
+                <label class="mcq-option"><input type="radio" name="pq2"> Polynomial terms</label>
             </div>
- 
             <div class="mcq-question">
-                <p>Q3. If rank of a 3×3 matrix A is 2, then A is:</p>
-                <label class="mcq-option"><input type="radio" name="pq3" value="a"> Invertible</label>
-                <label class="mcq-option"><input type="radio" name="pq3" value="b"> Singular</label>
-                <label class="mcq-option"><input type="radio" name="pq3" value="c"> Identity</label>
-                <label class="mcq-option"><input type="radio" name="pq3" value="d"> Symmetric</label>
+                <p>3. The natural angular frequency \(\omega_n\) is given by:</p>
+                <label class="mcq-option"><input type="radio" name="pq3"> \(\sqrt{c/m}\)</label>
+                <label class="mcq-option"><input type="radio" name="pq3"> \(\sqrt{k/m}\)</label>
+                <label class="mcq-option"><input type="radio" name="pq3"> \(\sqrt{m/k}\)</label>
+                <label class="mcq-option"><input type="radio" name="pq3"> \(k/m\)</label>
             </div>
- 
-            <button class="submit-btn" onclick="submitTest('posttest')">
-                <i class="fas fa-paper-plane"></i> Submit Posttest
-            </button>
+            <button class="submit-btn">Submit Answers</button>
         </div>
- 
-        <!-- 6. REFERENCES PAGE -->
-        <div id="page-references" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- PAGE: References -->
+        <div id="page-references" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
                 <i class="fas fa-book-open"></i>
                 <div>
                     <h2>References</h2>
-                    <p>Further reading &amp; resources</p>
+                    <p>Further reading and resources</p>
                 </div>
             </div>
             <ul class="ref-list">
-                <li>
-                    <i class="fas fa-book"></i>
-                    <div>
-                        <strong>Higher Engineering Mathematics</strong> — B.S. Grewal, Khanna Publishers.
-                        <br><span style="font-size:13px; color:#7f8c8d;">Chapter 2: Matrices and Linear Systems</span>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-book"></i>
-                    <div>
-                        <strong>Linear Algebra and its Applications</strong> — Gilbert Strang, MIT Press.
-                        <br><span style="font-size:13px; color:#7f8c8d;">Chapter 3: Vector Spaces and Subspaces</span>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-globe"></i>
-                    <div>
-                        <strong>MIT OpenCourseWare — 18.06 Linear Algebra</strong>
-                        <br><a href="https://ocw.mit.edu/courses/mathematics/18-06-linear-algebra-spring-2010/" target="_blank" style="color:#3498db; font-size:13px;">ocw.mit.edu</a>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-globe"></i>
-                    <div>
-                        <strong>Khan Academy — Matrices</strong>
-                        <br><a href="https://www.khanacademy.org/math/algebra-home/alg-matrices" target="_blank" style="color:#3498db; font-size:13px;">khanacademy.org</a>
-                    </div>
-                </li>
-                <li>
-                    <i class="fas fa-globe"></i>
-                    <div>
-                        <strong>NPTEL — Mathematics I (IIT lectures)</strong>
-                        <br><a href="https://nptel.ac.in/courses/111/104/111104081/" target="_blank" style="color:#3498db; font-size:13px;">nptel.ac.in</a>
-                    </div>
-                </li>
+                <li><i class="fas fa-book"></i> Kreyszig, E. — <em>Advanced Engineering Mathematics</em>, 10th Edition, Wiley.</li>
+                <li><i class="fas fa-book"></i> Simmons, G. F. — <em>Differential Equations with Applications and Historical Notes</em>, McGraw-Hill.</li>
+                <li><i class="fas fa-book"></i> Grewal, B. S. — <em>Higher Engineering Mathematics</em>, Khanna Publishers.</li>
+                <li><i class="fas fa-globe"></i> NPTEL Lectures on Engineering Mathematics — <em>Differential Equations and Applications</em>.</li>
+                <li><i class="fas fa-globe"></i> MIT OpenCourseWare — <em>18.03 Differential Equations</em>.</li>
             </ul>
         </div>
- 
-        <!-- 7. CONTRIBUTORS PAGE -->
-        <div id="page-contributors" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- PAGE: Contributors -->
+        <div id="page-contributors" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
                 <i class="fas fa-users"></i>
                 <div>
                     <h2>Contributors</h2>
-                    <p>People who built this virtual lab</p>
+                    <p>Team behind this virtual lab</p>
                 </div>
             </div>
             <div class="contributors-grid">
                 <div class="contributor-card">
                     <i class="fas fa-user-tie"></i>
-                    <h4>Dr. Faculty Name</h4>
+                    <h4>Dr. A. Sharma</h4>
                     <p>Principal Investigator</p>
                 </div>
                 <div class="contributor-card">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <h4>Prof. Faculty Name</h4>
+                    <i class="fas fa-user-graduate"></i>
+                    <h4>Prof. R. Patil</h4>
                     <p>Content Developer</p>
                 </div>
                 <div class="contributor-card">
-                    <i class="fas fa-user-graduate"></i>
-                    <h4>Student Name</h4>
+                    <i class="fas fa-user-cog"></i>
+                    <h4>Mr. D. Kute</h4>
                     <p>Web Developer</p>
                 </div>
                 <div class="contributor-card">
-                    <i class="fas fa-user-graduate"></i>
-                    <h4>Student Name</h4>
-                    <p>UI/UX Designer</p>
+                    <i class="fas fa-university"></i>
+                    <h4>PCCE</h4>
+                    <p>Pimpri Chinchwad College of Engineering</p>
                 </div>
             </div>
-            <p style="margin-top: 24px; color: #7f8c8d; font-size: 14px;">
-                <i class="fas fa-university" style="color:#3498db;"></i>
-                &nbsp;Applied Sciences &amp; Humanities Department, Pimpri Chinchwad College of Engineering.
-            </p>
         </div>
- 
-        <!-- 8. FEEDBACK PAGE -->
-        <div id="page-feedback" class="content card-page">
-            <button class="back-btn" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+
+        <!-- PAGE: Feedback -->
+        <div id="page-feedback" class="card-page content">
+            <button class="back-btn" onclick="showDashboard()"><i class="fas fa-arrow-left"></i> Back</button>
             <div class="card-page-header">
-                <i class="fas fa-comment-alt"></i>
+                <i class="fas fa-star"></i>
                 <div>
                     <h2>Feedback</h2>
                     <p>Share your experience with us</p>
                 </div>
             </div>
             <div class="feedback-form">
-                <label>Your Name</label>
-                <input type="text" placeholder="Enter your name">
- 
-                <label>Your Rating</label>
+                <label>Name</label>
+                <input type="text" placeholder="Your name">
+                <label>Email</label>
+                <input type="email" placeholder="Your email">
+                <label>Rating</label>
                 <div class="star-rating" id="starRating">
                     <i class="fas fa-star" data-val="1"></i>
                     <i class="fas fa-star" data-val="2"></i>
@@ -1075,131 +1324,61 @@
                     <i class="fas fa-star" data-val="4"></i>
                     <i class="fas fa-star" data-val="5"></i>
                 </div>
- 
-                <label>How was the simulation?</label>
-                <select>
-                    <option value="">-- Select --</option>
-                    <option>Excellent</option>
-                    <option>Good</option>
-                    <option>Average</option>
-                    <option>Needs Improvement</option>
-                </select>
- 
-                <label>Comments / Suggestions</label>
-                <textarea rows="4" placeholder="Write your feedback here..."></textarea>
- 
-                <button class="submit-btn" onclick="submitFeedback()">
-                    <i class="fas fa-paper-plane"></i> Submit Feedback
-                </button>
+                <label>Comments</label>
+                <textarea rows="5" placeholder="Write your feedback here..."></textarea>
+                <button class="submit-btn">Submit Feedback</button>
             </div>
         </div>
  
     </main>
  
-    <!-- Footer (unchanged) -->
-    <footer class="container">
-        <p>Virtual Labs &copy; 2025 | Applied Sciences &amp; Humanities Department |
-           <span class="footer-logo">Pimpri Chinchwad College of Engineering</span>
-        </p>
+    <footer>
+        <div class="container">
+            <p>© 2025 <span class="footer-logo">Virtual Labs</span> | <span class="footer-logo">PCCE</span> | Applied Sciences & Humanities Department</p>
+        </div>
     </footer>
  
- 
     <script>
-        // ============================================================
-        // ✅ ADDITIONS ONLY — Card Navigation Logic
-        // ============================================================
- 
-        // Open a card page and hide the main dashboard
-        function openPage(targetId) {
-            // Hide main dashboard
-            document.getElementById('main-dashboard').classList.add('hidden');
- 
-            // Hide all card pages
-            document.querySelectorAll('.card-page').forEach(function(page) {
-                page.classList.remove('active-page');
-            });
- 
-            // Show the requested page
-            var target = document.getElementById(targetId);
-            if (target) {
-                target.classList.add('active-page');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
- 
-        // Go back: hide all card pages, show main dashboard
-        function goBack() {
-            document.querySelectorAll('.card-page').forEach(function(page) {
-                page.classList.remove('active-page');
-            });
-            document.getElementById('main-dashboard').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
- 
-        // Attach click listeners to all section cards
-        document.querySelectorAll('.section-card').forEach(function(card) {
-            card.addEventListener('click', function() {
-                // Update active state on cards
-                document.querySelectorAll('.section-card').forEach(function(c) {
-                    c.classList.remove('active');
-                });
+        // ── Card navigation ──────────────────────────────────────────
+        const dashboard = document.getElementById('main-dashboard');
+        const cards     = document.querySelectorAll('.section-card');
+        const pages     = document.querySelectorAll('.card-page');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const targetId = card.dataset.target;
+                // hide dashboard
+                dashboard.classList.add('hidden');
+                // hide all pages
+                pages.forEach(p => p.classList.remove('active-page'));
+                // show target
+                document.getElementById(targetId).classList.add('active-page');
+                // update active card
+                cards.forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
- 
-                // Open the corresponding page
-                var target = card.getAttribute('data-target');
-                if (target) {
-                    openPage(target);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Re-render MathJax in the newly shown page
+                if (window.MathJax) {
+                    MathJax.typesetPromise([document.getElementById(targetId)]);
                 }
             });
         });
- 
-        // Star rating interaction (Feedback page)
-        var stars = document.querySelectorAll('#starRating .fa-star');
-        var selectedRating = 0;
- 
-        stars.forEach(function(star) {
-            star.addEventListener('mouseover', function() {
-                var val = parseInt(star.getAttribute('data-val'));
-                stars.forEach(function(s, idx) {
-                    s.classList.toggle('active', idx < val);
-                });
-            });
- 
-            star.addEventListener('mouseout', function() {
-                stars.forEach(function(s, idx) {
-                    s.classList.toggle('active', idx < selectedRating);
-                });
-            });
- 
-            star.addEventListener('click', function() {
-                selectedRating = parseInt(star.getAttribute('data-val'));
-                stars.forEach(function(s, idx) {
-                    s.classList.toggle('active', idx < selectedRating);
-                });
-            });
-        });
- 
-        // Submit handlers
-        function submitTest(type) {
-            alert('Your ' + (type === 'pretest' ? 'Pretest' : 'Posttest') + ' has been submitted successfully! Thank you.');
+
+        function showDashboard() {
+            pages.forEach(p => p.classList.remove('active-page'));
+            dashboard.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
- 
-        function submitFeedback() {
-            alert('Thank you for your feedback! It has been recorded.');
-            goBack();
-        }
- 
-        // ============================================================
-        // Original JS (unchanged)
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', function () {
-            var logoImg = document.getElementById('pcceLogo');
-            if (logoImg) {
-                logoImg.onerror = function () {
-                    this.onerror = null;
-                    this.src = 'https://via.placeholder.com/60x60/2c3e50/ffffff?text=PCOE';
-                };
-            }
+
+        // ── Star rating ──────────────────────────────────────────────
+        const stars = document.querySelectorAll('#starRating i');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = parseInt(star.dataset.val);
+                stars.forEach(s => {
+                    s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+                });
+            });
         });
     </script>
 </body>
